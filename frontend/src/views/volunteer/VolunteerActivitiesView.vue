@@ -47,7 +47,7 @@
                 color="blue"
                 v-on="on"
                 data-cy="applyButton"
-                @click="createEnrollment"
+                @click="() => createEnrollment(item.id)"
                 >mdi-login</v-icon
               >
             </template>
@@ -58,7 +58,9 @@
       <enrollment-dialog
         v-if="createEnrollmentDialog"
         v-model="createEnrollmentDialog"
+        :activityId="activityId"
         v-on:close-enrollment-dialog="onCloseEnrollmentDialog"
+        v-on:create-enrollment="onCreateEnrollment"
       />
     </v-card>
   </div>
@@ -83,6 +85,7 @@ export default class VolunteerActivitiesView extends Vue {
   enrollments: Enrollment[] = [];
   search: string = '';
 
+  activityId: number | null = null;
   createEnrollmentDialog: boolean = false;
 
   headers: object = [
@@ -160,12 +163,18 @@ export default class VolunteerActivitiesView extends Vue {
     await this.$store.dispatch('clearLoading');
   }
 
-  createEnrollment() {
+  createEnrollment(activityId: number) {
+    this.activityId = activityId;
     this.createEnrollmentDialog = true;
   }
 
   onCloseEnrollmentDialog() {
     this.createEnrollmentDialog = false;
+  }
+
+  onCreateEnrollment(enrollment: Enrollment) {
+    this.createEnrollmentDialog = false;
+    this.enrollments.push(enrollment);
   }
 
   canEnrollInActivity(activity: Activity): boolean {

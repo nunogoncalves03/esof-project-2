@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" persistent width="600">
     <v-card>
       <v-card-title>
-        <span class="headline">New Enrollment</span>
+        <span class="headline">New Application</span>
       </v-card-title>
       <v-card-text>
         <v-form ref="form" @submit="createEnrollment">
@@ -47,7 +47,7 @@
   </v-dialog>
 </template>
 <script lang="ts">
-import { Vue, Component, Model } from 'vue-property-decorator';
+import { Vue, Component, Prop, Model } from 'vue-property-decorator';
 import Enrollment from '@/models/enrollment/Enrollment';
 import RemoteServices from '@/services/RemoteServices';
 import { ISOtoString } from '@/services/ConvertDateService';
@@ -57,6 +57,7 @@ import { ISOtoString } from '@/services/ConvertDateService';
 })
 export default class EnrollmentDialog extends Vue {
   @Model('dialog', Boolean) dialog!: boolean;
+  @Prop({ type: Number, required: true }) readonly activityId!: number;
 
   newEnrollment: Enrollment = new Enrollment();
 
@@ -64,6 +65,7 @@ export default class EnrollmentDialog extends Vue {
 
   async created() {
     this.newEnrollment = new Enrollment();
+    this.newEnrollment.activityId = this.activityId;
   }
 
   isMotivationValid(motivation?: string) {
@@ -83,13 +85,16 @@ export default class EnrollmentDialog extends Vue {
 
   async createEnrollment(e?: SubmitEvent) {
     if (e) {
+      // prevent default form submission behaviour (page reload)
       e.preventDefault();
     }
 
     if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
       try {
-        // TODO: implement
-        console.log('submited');
+        const result = await RemoteServices.registerEnrollment(
+          this.newEnrollment,
+        );
+        this.$emit('create-enrollment', result);
       } catch (error) {
         await this.$store.dispatch('error', error);
       }
