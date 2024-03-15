@@ -48,7 +48,6 @@
                 v-on="on"
                 data-cy="applyButton"
                 onclick="alert('not implemented')"
-                @click=""
                 >mdi-login</v-icon
               >
             </template>
