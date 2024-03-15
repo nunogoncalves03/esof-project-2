@@ -40,7 +40,7 @@
             </template>
             <span>Report Activity</span>
           </v-tooltip>
-          <v-tooltip bottom>
+          <v-tooltip v-if="canEnrollInActivity(item)" bottom>
             <template v-slot:activator="{ on }">
               <v-icon
                 class="mr-2 action-button"
@@ -63,6 +63,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import Activity from '@/models/activity/Activity';
+import Enrollment from '@/models/enrollment/Enrollment';
 import { show } from 'cli-cursor';
 
 @Component({
@@ -70,6 +71,7 @@ import { show } from 'cli-cursor';
 })
 export default class VolunteerActivitiesView extends Vue {
   activities: Activity[] = [];
+  enrollments: Enrollment[] = [];
   search: string = '';
   headers: object = [
     {
@@ -139,10 +141,20 @@ export default class VolunteerActivitiesView extends Vue {
     await this.$store.dispatch('loading');
     try {
       this.activities = await RemoteServices.getActivities();
+      this.enrollments = await RemoteServices.getVolunteerEnrollments();
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
     await this.$store.dispatch('clearLoading');
+  }
+
+  canEnrollInActivity(activity: Activity): boolean {
+    return (
+      activity.applicationDeadline > new Date().toISOString() &&
+      !this.enrollments.some(
+        (enrollment) => enrollment.activityId === activity.id,
+      )
+    );
   }
 
   async reportActivity(activity: Activity) {
