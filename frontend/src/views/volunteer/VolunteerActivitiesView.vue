@@ -47,7 +47,7 @@
                 color="blue"
                 v-on="on"
                 data-cy="applyButton"
-                onclick="alert('not implemented')"
+                @click="createEnrollment"
                 >mdi-login</v-icon
               >
             </template>
@@ -55,6 +55,11 @@
           </v-tooltip>
         </template>
       </v-data-table>
+      <enrollment-dialog
+        v-if="createEnrollmentDialog"
+        v-model="createEnrollmentDialog"
+        v-on:close-enrollment-dialog="onCloseEnrollmentDialog"
+      />
     </v-card>
   </div>
 </template>
@@ -64,15 +69,22 @@ import { Component, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import Activity from '@/models/activity/Activity';
 import Enrollment from '@/models/enrollment/Enrollment';
+import EnrollmentDialog from '@/views/volunteer/EnrollmentDialog.vue';
 import { show } from 'cli-cursor';
 
 @Component({
   methods: { show },
+  components: {
+    'enrollment-dialog': EnrollmentDialog,
+  },
 })
 export default class VolunteerActivitiesView extends Vue {
   activities: Activity[] = [];
   enrollments: Enrollment[] = [];
   search: string = '';
+
+  createEnrollmentDialog: boolean = false;
+
   headers: object = [
     {
       text: 'Name',
@@ -146,6 +158,14 @@ export default class VolunteerActivitiesView extends Vue {
       await this.$store.dispatch('error', error);
     }
     await this.$store.dispatch('clearLoading');
+  }
+
+  createEnrollment() {
+    this.createEnrollmentDialog = true;
+  }
+
+  onCloseEnrollmentDialog() {
+    this.createEnrollmentDialog = false;
   }
 
   canEnrollInActivity(activity: Activity): boolean {
