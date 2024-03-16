@@ -1,35 +1,50 @@
-<template>
+```<template>
   <v-card class="table">
     <div class="text-h3">{{ activity.name }}</div>
     <v-data-table
-      :headers="headers"
-      :items="enrollments"
-      :search="search"
-      disable-pagination
-      :hide-default-footer="true"
-      :mobile-breakpoint="0"
-      data-cy="activityEnrollmentsTable"
+        :headers="headers"
+        :items="enrollments"
+        :search="search"
+        disable-pagination
+        :hide-default-footer="true"
+        :mobile-breakpoint="0"
+        data-cy="activityEnrollmentsTable"
     >
       <template v-slot:top>
         <v-card-title>
           <v-text-field
-            v-model="search"
-            append-icon="search"
-            label="Search"
-            class="mx-2"
+              v-model="search"
+              append-icon="search"
+              label="Search"
+              class="mx-2"
           />
           <v-spacer />
           <v-btn
-            color="primary"
-            dark
-            @click="getActivities"
-            data-cy="getActivities"
-            >Activities</v-btn
+              color="primary"
+              dark
+              @click="getActivities"
+              data-cy="getActivities"
+          >Activities</v-btn
           >
         </v-card-title>
       </template>
       <template v-slot:[`item.participating`]="{ item }">
         <v-icon>{{ isParticipating(item) ? 'mdi-check' : 'mdi-close' }}</v-icon>
+      </template>
+
+      <template v-slot:[`item.actions`]="{}">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-icon
+                class="mr-2 action-button"
+                v-on="on"
+                onclick=""
+            >
+              mdi-check
+            </v-icon>
+          </template>
+          <span>Select Participant</span>
+        </v-tooltip>
       </template>
     </v-data-table>
   </v-card>
@@ -65,12 +80,20 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
     {
       text: 'Participating',
       value: 'participating',
+      sortable: false,
       align: 'left',
       width: '10%',
     },
     {
       text: 'Application Date',
       value: 'enrollmentDateTime',
+      align: 'left',
+      width: '10%',
+    },
+    {
+      text: 'Actions',
+      value: 'actions',
+      sortable: false,
       align: 'left',
       width: '5%',
     },
@@ -82,10 +105,10 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
       await this.$store.dispatch('loading');
       try {
         this.enrollments = await RemoteServices.getActivityEnrollments(
-          this.activity.id,
+            this.activity.id,
         );
         this.participations = await RemoteServices.getActivityParticipations(
-          this.activity.id,
+            this.activity.id,
         );
       } catch (error) {
         await this.$store.dispatch('error', error);
@@ -104,9 +127,9 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
 
     if (enrollment.id !== null) {
       if (
-        this.participations.some(
-          (p) => p.volunteerId === enrollment.volunteerId,
-        )
+          this.participations.some(
+              (p) => p.volunteerId === enrollment.volunteerId,
+          )
       ) {
         participating = true;
       }
@@ -129,3 +152,4 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
   margin-top: 8px;
 }
 </style>
+```
