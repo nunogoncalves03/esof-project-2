@@ -80,6 +80,7 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
     {
       text: 'Participating',
       value: 'participating',
+      sortable: false,
       align: 'left',
       width: '10%',
     },
@@ -92,6 +93,7 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
     {
       text: 'Actions',
       value: 'actions',
+      sortable: false,
       align: 'left',
       width: '5%',
     },
