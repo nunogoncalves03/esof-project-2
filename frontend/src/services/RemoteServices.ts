@@ -518,6 +518,22 @@ export default class RemoteServices {
       });
   }
 
+  static async createParticipations(
+    participation: Participation,
+  ): Promise<Participation> {
+    return httpClient
+      .post(
+        `/activities/${participation.activityId}/participations`,
+        participation,
+      )
+      .then((response) => {
+        return new Participation(response.data);
+      })
+      .catch(async (error) => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
   // Theme Controller
 
   static async getThemes(): Promise<Theme[]> {
