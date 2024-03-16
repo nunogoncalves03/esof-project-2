@@ -38,7 +38,7 @@
             <v-icon
                 class="mr-2 action-button"
                 v-on="on"
-                onclick=""
+                @click="createParticipation"
             >
               mdi-check
             </v-icon>
@@ -47,6 +47,11 @@
         </v-tooltip>
       </template>
     </v-data-table>
+    <participation-dialog
+        v-if="createParticipationDialog"
+        v-model="createParticipationDialog"
+        v-on:close-participation-dialog="closeParticipationDialog"
+    />
   </v-card>
 </template>
 
@@ -56,13 +61,21 @@ import RemoteServices from '@/services/RemoteServices';
 import Activity from '@/models/activity/Activity';
 import Enrollment from '@/models/enrollment/Enrollment';
 import Participation from '@/models/participation/Participation';
+import ParticipationDialog from '@/views/member/ParticipationDialog.vue';
 
-@Component({})
+@Component({
+  components: {
+    'participation-dialog': ParticipationDialog,
+  },
+})
 export default class InstitutionActivityEnrollmentsView extends Vue {
   activity!: Activity;
   enrollments: Enrollment[] = [];
   participations: Participation[] = [];
   search: string = '';
+
+  //currentParticipation: Participation | null = null;
+  createParticipationDialog: boolean = false;
 
   headers: object = [
     {
@@ -117,6 +130,14 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
     }
   }
 
+  createParticipation() {
+    this.createParticipationDialog = true;
+  }
+
+  closeParticipationDialog() {
+    this.createParticipationDialog = false;
+  }
+
   async getActivities() {
     await this.$store.dispatch('setActivity', null);
     this.$router.push({ name: 'institution-activities' }).catch(() => {});
@@ -135,6 +156,7 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
       ) && this.participations.length < this.activity.participantsNumberLimit
     );
   }
+
 }
 </script>
 
