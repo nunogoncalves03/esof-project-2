@@ -36,9 +36,9 @@
         <v-tooltip v-if="canParticipateInActivity(item)" bottom>
           <template v-slot:activator="{ on }">
             <v-icon
-                class="mr-2 action-button"
-                v-on="on"
-                @click="createParticipation"
+              class="mr-2 action-button"
+              v-on="on"
+              @click="() => createParticipation(item.volunteerId)"
             >
               mdi-check
             </v-icon>
@@ -48,9 +48,12 @@
       </template>
     </v-data-table>
     <participation-dialog
-        v-if="createParticipationDialog"
-        v-model="createParticipationDialog"
-        v-on:close-participation-dialog="closeParticipationDialog"
+      v-if="createParticipationDialog"
+      v-model="createParticipationDialog"
+      :activityId="activity.id"
+      :volunteerId="volunteerId"
+      v-on:close-participation-dialog="closeParticipationDialog"
+      v-on:create-participation="onCreateParticipation"
     />
   </v-card>
 </template>
@@ -74,7 +77,7 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
   participations: Participation[] = [];
   search: string = '';
 
-  //currentParticipation: Participation | null = null;
+  volunteerId: number | null = null;
   createParticipationDialog: boolean = false;
 
   headers: object = [
@@ -130,8 +133,12 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
     }
   }
 
-  createParticipation() {
+  createParticipation(volunteerId: number) {
+    this.volunteerId = volunteerId;
     this.createParticipationDialog = true;
+  }
+  onCreateParticipation() {
+    this.createParticipationDialog = false;
   }
 
   closeParticipationDialog() {
@@ -156,7 +163,6 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
       ) && this.participations.length < this.activity.participantsNumberLimit
     );
   }
-
 }
 </script>
 

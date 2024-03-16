@@ -518,7 +518,7 @@ export default class RemoteServices {
       });
   }
 
-  static async createParticipations(
+  static async createParticipation(
     participation: Participation,
   ): Promise<Participation> {
     return httpClient
