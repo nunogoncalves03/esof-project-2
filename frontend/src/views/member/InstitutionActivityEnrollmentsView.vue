@@ -29,8 +29,7 @@
         </v-card-title>
       </template>
       <template v-slot:[`item.participating`]="{ item }">
-        <v-icon v-if="item.participating" color="green" dark>mdi-check</v-icon>
-        <v-icon v-else color="red" dark>mdi-close</v-icon>
+        <v-icon>{{ isParticipating(item) ? 'mdi-check' : 'mdi-close' }}</v-icon>
       </template>
     </v-data-table>
   </v-card>
@@ -41,11 +40,13 @@ import { Component, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import Activity from '@/models/activity/Activity';
 import Enrollment from '@/models/enrollment/Enrollment';
+import Participation from '@/models/participation/Participation';
 
 @Component({})
 export default class InstitutionActivityEnrollmentsView extends Vue {
   activity!: Activity;
   enrollments: Enrollment[] = [];
+  participations: Participation[] = [];
   search: string = '';
 
   headers: object = [
@@ -83,6 +84,9 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
         this.enrollments = await RemoteServices.getActivityEnrollments(
           this.activity.id,
         );
+        this.participations = await RemoteServices.getActivityParticipations(
+          this.activity.id,
+        );
       } catch (error) {
         await this.$store.dispatch('error', error);
       }
@@ -93,6 +97,21 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
   async getActivities() {
     await this.$store.dispatch('setActivity', null);
     this.$router.push({ name: 'institution-activities' }).catch(() => {});
+  }
+
+  isParticipating(enrollment: Enrollment): boolean {
+    let participating = false;
+
+    if (enrollment.id !== null) {
+      if (
+        this.participations.some(
+          (p) => p.volunteerId === enrollment.volunteerId,
+        )
+      ) {
+        participating = true;
+      }
+    }
+    return participating;
   }
 }
 </script>

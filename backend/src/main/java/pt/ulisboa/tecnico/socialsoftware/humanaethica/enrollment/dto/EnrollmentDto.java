@@ -5,10 +5,10 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler;
 
 public class EnrollmentDto {
     private Integer id;
+    private Integer volunteerId;
     private String motivation;
     private String enrollmentDateTime;
     private String volunteerName;
-
 
     public EnrollmentDto() {}
 
@@ -17,6 +17,7 @@ public class EnrollmentDto {
         this.motivation = enrollment.getMotivation();
         this.enrollmentDateTime = DateHandler.toISOString(enrollment.getEnrollmentDateTime());
         this.volunteerName = enrollment.getVolunteer().getName();
+        this.volunteerId = enrollment.getVolunteer().getId();
     }
 
     public Integer getId() {
@@ -49,5 +50,13 @@ public class EnrollmentDto {
 
     public void setVolunteerName(String volunteerName) {
         this.volunteerName = volunteerName;
+    }
+
+    public Integer getVolunteerId() {
+        return volunteerId;
+    }
+
+    public void setVolunteerId(Integer volunteerId) {
+        this.volunteerId = volunteerId;
     }
 }
