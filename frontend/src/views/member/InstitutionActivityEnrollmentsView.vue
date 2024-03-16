@@ -31,6 +31,21 @@
       <template v-slot:[`item.participating`]="{ item }">
         <v-icon>{{ isParticipating(item) ? 'mdi-check' : 'mdi-close' }}</v-icon>
       </template>
+
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-tooltip v-if="canParticipateInActivity(item)" bottom>
+          <template v-slot:activator="{ on }">
+            <v-icon
+                class="mr-2 action-button"
+                v-on="on"
+                onclick=""
+            >
+              mdi-check
+            </v-icon>
+          </template>
+          <span>Select Participant</span>
+        </v-tooltip>
+      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -72,6 +87,12 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
       text: 'Application Date',
       value: 'enrollmentDateTime',
       align: 'left',
+      width: '10%',
+    },
+    {
+      text: 'Actions',
+      value: 'actions',
+      align: 'left',
       width: '5%',
     },
   ];
@@ -100,18 +121,17 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
   }
 
   isParticipating(enrollment: Enrollment): boolean {
-    let participating = false;
+    return this.participations.some(
+      (p) => p.volunteerId === enrollment.volunteerId,
+    );
+  }
 
-    if (enrollment.id !== null) {
-      if (
-        this.participations.some(
-          (p) => p.volunteerId === enrollment.volunteerId,
-        )
-      ) {
-        participating = true;
-      }
-    }
-    return participating;
+  canParticipateInActivity(enrollment: Enrollment): boolean {
+    return (
+      !this.participations.some(
+        (p) => p.volunteerId === enrollment.volunteerId,
+      ) && this.participations.length < this.activity.participantsNumberLimit
+    );
   }
 }
 </script>
