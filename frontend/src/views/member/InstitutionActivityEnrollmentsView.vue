@@ -28,6 +28,10 @@
           >
         </v-card-title>
       </template>
+      <template v-slot:[`item.participating`]="{ item }">
+        <v-icon v-if="item.participating" color="green" dark>mdi-check</v-icon>
+        <v-icon v-else color="red" dark>mdi-close</v-icon>
+      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -46,10 +50,22 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
 
   headers: object = [
     {
+      text: 'Name',
+      value: 'volunteerName',
+      align: 'left',
+      width: '20%',
+    },
+    {
       text: 'Motivation',
       value: 'motivation',
       align: 'left',
       width: '50%',
+    },
+    {
+      text: 'Participating',
+      value: 'participating',
+      align: 'left',
+      width: '10%',
     },
     {
       text: 'Application Date',
