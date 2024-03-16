@@ -6,7 +6,6 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler;
 public class EnrollmentDto {
     private Integer id;
     private String motivation;
-
     private String enrollmentDateTime;
 
 
