@@ -137,8 +137,12 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
     this.volunteerId = volunteerId;
     this.createParticipationDialog = true;
   }
-  onCreateParticipation() {
+  onCreateParticipation(Participation: Participation) {
     this.createParticipationDialog = false;
+    this.participations.push(Participation);
+    this.enrollments = this.enrollments.filter(
+      (e) => e.volunteerId !== Participation.volunteerId,
+    );
   }
 
   closeParticipationDialog() {
