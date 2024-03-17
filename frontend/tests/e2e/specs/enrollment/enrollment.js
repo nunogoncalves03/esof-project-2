@@ -32,5 +32,43 @@ describe('Enrollment', () => {
       .should('contain', '0');
       
     cy.logout();
+
+    cy.demoVolunteerLogin();
+
+    // intercept get activities request
+    cy.intercept('GET', '/activities').as('getActivities');
+    // intercept get volunteer enrollments request
+    cy.intercept('GET', '/enrollments/volunteer').as('getVolunteerEnrollments');
+    // go to volunteer activities view
+    cy.get('[data-cy="volunteerActivities"]').click();
+    // check requests were done
+    cy.wait('@getActivities');
+    cy.wait('@getVolunteerEnrollments');
+
+    // go to apply button
+    cy.get('[data-cy="volunteerActivitiesTable"] tbody tr')
+      .should('have.length', 3)
+      .eq(0)
+      .children()
+      .find('[data-cy="applyButton"]')
+      .click();
+
+    // intercept create enrollment request
+    cy.intercept('POST', '/activities/*/enrollments').as('createEnrollment');
+
+    // fill form
+    cy.get('[data-cy="motivationInput"]').type(MOTIVATION);
+    cy.get('[data-cy="createEnrollment"]').click();
+    
+    cy.wait("@createEnrollment");
+
+    // check that it is not possible to enroll anymore
+    cy.get('[data-cy="volunteerActivitiesTable"] tbody tr')
+    .eq(0)
+    .children()
+    .find('[data-cy="applyButton"]')
+    .should('not.exist');
+
+    cy.logout();
   });
 });
