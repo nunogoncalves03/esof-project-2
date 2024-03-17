@@ -35,6 +35,10 @@ Cypress.Commands.add('deleteAllButArs', () => {
         credentials: credentials,
     })
   cy.task('queryDatabase', {
+    query: "DELETE FROM ENROLLMENT",
+    credentials: credentials,
+  })
+  cy.task('queryDatabase', {
     query: "DELETE FROM ACTIVITY",
     credentials: credentials,
   })
