@@ -29,7 +29,7 @@
         </v-card-title>
       </template>
       <template v-slot:[`item.participating`]="{ item }">
-        <v-icon>{{ isParticipating(item) ? 'mdi-check' : 'mdi-close' }}</v-icon>
+        <v-icon>{{ isParticipating(item) ? 'true' : 'false' }}</v-icon>
       </template>
 
       <template v-slot:[`item.actions`]="{ item }">
