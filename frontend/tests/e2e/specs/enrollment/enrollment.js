@@ -70,5 +70,38 @@ describe('Enrollment', () => {
     .should('not.exist');
 
     cy.logout();
+
+    cy.demoMemberLogin();
+
+    // go to activities table
+    cy.get('[data-cy="institution"]').click();
+    cy.get('[data-cy="activities"]').click();
+    cy.wait('@getInstitution');
+
+    cy.intercept('GET', '/activities/*/enrollments').as('getActivityEnrollments');
+
+    // check number of applications and navigate to activity's enrollments
+    cy.get('[data-cy="memberActivitiesTable"] tbody tr')
+      .should('have.length', 3)
+      .eq(0)
+      .children()
+      .should('have.length', 12)
+      .eq(3)
+      .should('contain', '1')
+      .parent()
+      .find('[data-cy="showEnrollments"]')
+      .click()
+
+    cy.wait('@getActivityEnrollments');
+
+    // check activity's enrollments
+    cy.get('[data-cy="activityEnrollmentsTable"] tbody tr')
+      .should('have.length', 1)
+      .eq(0)
+      .children()
+      .eq(0)
+      .should('contain', MOTIVATION);
+      
+    cy.logout();
   });
 });
