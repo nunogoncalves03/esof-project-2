@@ -2,7 +2,7 @@ describe('Enrollment', () => {
   beforeEach(() => {
     cy.deleteAllButArs();
     cy.createDemoEntities();
-    cy.createDemoActivities();
+    cy.createDemoActivitiesForEnrollmentTest();
   });
 
   afterEach(() => {

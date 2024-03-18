@@ -160,26 +160,26 @@ Cypress.Commands.add('createDemoActivitiesForParticipationTest', () => {
     })
 });
 
-Cypress.Commands.add('createDemoActivities', () => {
+Cypress.Commands.add('createDemoActivitiesForEnrollmentTest', () => {
   cy.task('queryDatabase',  {
-    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTuple(1, "2024-08-06 17:58:21.402146", "Enrollment is open", "A1"),
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(1, "2024-08-06 17:58:21.402146", "Enrollment is open", "A1"),
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
-    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTuple(2, "2024-08-06 17:58:21.402146", "Enrollment is open and it is already enrolled", "A2"),
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(2, "2024-08-06 17:58:21.402146", "Enrollment is open and it is already enrolled", "A2"),
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
-    query: "INSERT INTO " + ENROLLMENT_COLUMNS + generateEnrollmentTuple(5, "2024-02-06 18:51:37.595713", 2),
+    query: "INSERT INTO " + ENROLLMENT_COLUMNS + generateEnrollmentTupleForEnrollmentTest(5, "2024-02-06 18:51:37.595713", 2),
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
-    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTuple(3, "2024-02-06 17:58:21.402146", "Enrollment is closed", "A3"),
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(3, "2024-02-06 17:58:21.402146", "Enrollment is closed", "A3"),
     credentials: credentials,
   })
 });
 
-function generateActivityTuple(id, applicationDeadline, description, name) {
+function generateActivityTupleForEnrollmentTest(id, applicationDeadline, description, name) {
   return "VALUES ('"
     + id + "', '"
     + applicationDeadline + "', '2024-08-06 17:58:21.402146', '"
@@ -189,7 +189,7 @@ function generateActivityTuple(id, applicationDeadline, description, name) {
     + "2024-08-07 17:58:21.402146" + "', 'APPROVED', '1')";
 }
 
-function generateEnrollmentTuple(id, enrollmentDateTime, activityId) {
+function generateEnrollmentTupleForEnrollmentTest(id, enrollmentDateTime, activityId) {
   return "VALUES ('"
     + id + "', '" + enrollmentDateTime + "', '"
     + "sql-inserted-motivation" + "', '"
