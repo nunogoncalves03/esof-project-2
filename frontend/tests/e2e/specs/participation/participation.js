@@ -1,8 +1,8 @@
 describe('Participation', () => {
     beforeEach(() => {
         cy.deleteAllButArs();
-        cy.createDemoEntities();
-        cy.createDemoActivities2();
+        cy.createDemoEntitiesForParticipationTest();
+        cy.createDemoActivitiesForParticipationTest();
     });
 
     afterEach(() => {
