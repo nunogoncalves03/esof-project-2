@@ -159,6 +159,9 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
   }
 
   canParticipateInActivity(enrollment: Enrollment): boolean {
+    if (this.$store.getters.getLoading) {
+      return false;
+    }
     return (
       !this.participations.some(
         (p) => p.volunteerId === enrollment.volunteerId,
