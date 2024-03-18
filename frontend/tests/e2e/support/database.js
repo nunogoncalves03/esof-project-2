@@ -6,8 +6,6 @@ const credentials = {
   port: Cypress.env('psql_db_port'),
 };
 
-const ACTIVITY_COLUMNS = "activity (id, application_deadline, creation_date, description, ending_date, name, participants_number_limit, region, starting_date, state, institution_id)";
-const ENROLLMENT_COLUMNS = "enrollment (id, enrollment_date_time, motivation, activity_id, volunteer_id)";
 const INSTITUTION_COLUMNS = "institutions (id, active, confirmation_token, creation_date, email, name, nif, token_generation_date)";
 const USER_COLUMNS = "users (user_type, id, creation_date, name, role, state, institution_id)";
 const AUTH_USERS_COLUMNS = "auth_users (auth_type, id, active, email, username, user_id)";
@@ -179,23 +177,6 @@ Cypress.Commands.add('createDemoActivitiesForEnrollmentTest', () => {
   })
 });
 
-function generateActivityTupleForEnrollmentTest(id, applicationDeadline, description, name) {
-  return "VALUES ('"
-    + id + "', '"
-    + applicationDeadline + "', '2024-08-06 17:58:21.402146', '"
-    + description + "', '"
-    + "2024-08-08 17:58:21.40214" + "', '"
-    + name + "', '1', 'Lisbon', '"
-    + "2024-08-07 17:58:21.402146" + "', 'APPROVED', '1')";
-}
-
-function generateEnrollmentTupleForEnrollmentTest(id, enrollmentDateTime, activityId) {
-  return "VALUES ('"
-    + id + "', '" + enrollmentDateTime + "', '"
-    + "sql-inserted-motivation" + "', '"
-    + activityId + "', '3')";
-}
-
 function generateAuthUserTuple(id, authType, username, userId) {
   return "VALUES ('"
     + authType + "', '"
@@ -211,6 +192,11 @@ function generateUserTuple(id, userType, name, role, institutionId) {
     + name + "', '"
     + role + "', 'ACTIVE', "
     + institutionId + ")";
+}
+
+function generateInstitutionTuple(id) {
+  return "VALUES ('"
+    + id + "', 't', 'abca428c09862e89', '2022-08-06 17:58:21.402146','demo_institution@mail.com', 'DEMO INSTITUTION', '000000000', '2024-02-06 17:58:21.402134')";
 }
 
 function generateActivityTupleForParticipationTest(id, description, name, participantsNumberLimit) {
@@ -237,7 +223,19 @@ function generateParticipationTupleForParticipationTest(id, activityId, voluntee
         + volunteerId + "')";
 }
 
-function generateInstitutionTuple(id) {
+function generateActivityTupleForEnrollmentTest(id, applicationDeadline, description, name) {
   return "VALUES ('"
-    + id + "', 't', 'abca428c09862e89', '2022-08-06 17:58:21.402146','demo_institution@mail.com', 'DEMO INSTITUTION', '000000000', '2024-02-06 17:58:21.402134')";
+    + id + "', '"
+    + applicationDeadline + "', '2024-08-06 17:58:21.402146', '"
+    + description + "', '"
+    + "2024-08-08 17:58:21.40214" + "', '"
+    + name + "', '1', 'Lisbon', '"
+    + "2024-08-07 17:58:21.402146" + "', 'APPROVED', '1')";
+}
+
+function generateEnrollmentTupleForEnrollmentTest(id, enrollmentDateTime, activityId) {
+  return "VALUES ('"
+    + id + "', '" + enrollmentDateTime + "', '"
+    + "sql-inserted-motivation" + "', '"
+    + activityId + "', '3')";
 }

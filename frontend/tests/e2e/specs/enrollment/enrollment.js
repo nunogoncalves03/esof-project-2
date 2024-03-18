@@ -27,7 +27,7 @@ describe('Enrollment', () => {
       .should('have.length', 3)
       .eq(0)
       .children()
-      .should('have.length', 12)
+      .should('have.length', 13)
       .eq(3)
       .should('contain', '0');
       
@@ -85,7 +85,7 @@ describe('Enrollment', () => {
       .should('have.length', 3)
       .eq(0)
       .children()
-      .should('have.length', 12)
+      .should('have.length', 13)
       .eq(3)
       .should('contain', '1')
       .parent()
@@ -99,7 +99,7 @@ describe('Enrollment', () => {
       .should('have.length', 1)
       .eq(0)
       .children()
-      .eq(0)
+      .eq(1)
       .should('contain', MOTIVATION);
       
     cy.logout();

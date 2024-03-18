@@ -34,7 +34,7 @@ describe('Participation', () => {
             .should('have.length', 2) // check if activity table has 2 instances
             .eq(0)
             .children()
-            .eq(3)
+            .eq(4)
             .should('contain', NUM_PARTICIPATIONS_1); // check if first activity has 1 participation
 
         // select show enrollments on first activity
@@ -86,7 +86,7 @@ describe('Participation', () => {
             .should('have.length', 2) // check if activity table has 2 instances
             .eq(0)
             .children()
-            .eq(2)
+            .eq(4)
             .should('contain', NUM_PARTICIPATIONS_2); // check if first activity now has 2 participations*/
 
         cy.logout();
