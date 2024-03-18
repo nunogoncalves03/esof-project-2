@@ -61,8 +61,6 @@ export default class EnrollmentDialog extends Vue {
 
   newEnrollment: Enrollment = new Enrollment();
 
-  cypressCondition: boolean = false;
-
   async created() {
     this.newEnrollment = new Enrollment();
     this.newEnrollment.activityId = this.activityId;
@@ -77,10 +75,6 @@ export default class EnrollmentDialog extends Vue {
 
   canCreate(): boolean {
     return this.isMotivationValid(this.newEnrollment.motivation);
-  }
-
-  get canSave() {
-    return this.cypressCondition || this.canCreate();
   }
 
   async createEnrollment(e?: SubmitEvent) {
