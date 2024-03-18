@@ -53,7 +53,7 @@
             </template>
             <span>Apply for Activity</span>
           </v-tooltip>
-          <v-tooltip bottom>
+          <v-tooltip v-if="canAssessInstitution(item)" bottom>
             <template v-slot:activator="{ on }">
               <v-icon
                 class="mr-2 action-button"
@@ -86,6 +86,8 @@ import Activity from '@/models/activity/Activity';
 import Enrollment from '@/models/enrollment/Enrollment';
 import EnrollmentDialog from '@/views/volunteer/EnrollmentDialog.vue';
 import { show } from 'cli-cursor';
+import Assessment from "@/models/assessment/Assessment";
+import Participation from "@/models/participation/Participation";
 
 @Component({
   methods: { show },
@@ -96,6 +98,8 @@ import { show } from 'cli-cursor';
 export default class VolunteerActivitiesView extends Vue {
   activities: Activity[] = [];
   enrollments: Enrollment[] = [];
+  assessments: Assessment[] = [];
+  participations: Participation[] = [];
   search: string = '';
 
   activityId: number | null = null;
@@ -170,6 +174,8 @@ export default class VolunteerActivitiesView extends Vue {
     try {
       this.activities = await RemoteServices.getActivities();
       this.enrollments = await RemoteServices.getVolunteerEnrollments();
+      this.assessments = await RemoteServices.getVolunteerAssessments();
+      this.participations = await RemoteServices.getVolunteerParticipations();
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
@@ -220,6 +226,12 @@ export default class VolunteerActivitiesView extends Vue {
       }
     }
   }
+
+  canAssessInstitution(activity: Activity): boolean {
+    return (activity.endingDate < new Date().toISOString() &&
+      !this.assessments.some((assessment) => assessment.institutionId === activity.institution.id)) &&
+      this.participations.some((participation) => participation.activityId === activity.id)
+  };
 }
 </script>
 
