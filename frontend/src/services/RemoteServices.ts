@@ -572,6 +572,21 @@ export default class RemoteServices {
       });
   }
 
+  // Participation Controller
+
+  static async getVolunteerParticipations(): Promise<Participation[]> {
+    return httpClient
+      .get('/participations/volunteer')
+      .then((response) => {
+        return response.data.map((participation: any) => {
+          return new Participation(participation);
+        });
+      })
+      .catch(async (error) => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
   // Theme Controller
 
   static async getThemes(): Promise<Theme[]> {
