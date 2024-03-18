@@ -11,7 +11,7 @@ public class AssessmentDto {
     private String review;
     private String reviewDate;
     private Integer institutionId;
-
+    private String volunteerName;
 
     public AssessmentDto() {}
 
@@ -52,5 +52,13 @@ public class AssessmentDto {
 
     public void setReviewDate(Integer institutionId) {
         this.institutionId = institutionId;
+    }
+
+    public String getVolunteerName() {
+        return volunteerName;
+    }
+
+    public void setVolunteerName(String volunteerName) {
+        this.volunteerName = volunteerName;
     }
 }
