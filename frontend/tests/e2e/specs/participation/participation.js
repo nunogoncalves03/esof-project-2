@@ -13,6 +13,8 @@ describe('Participation', () => {
         const NOT_PARTICIPATING = 'false';
         const PARTICIPATING = 'true';
         const RATING_1 = '1';
+        const NUM_PARTICIPATIONS_1 = '1';
+        const NUM_PARTICIPATIONS_2 = '2';
 
         cy.demoMemberLogin();
 
@@ -31,22 +33,25 @@ describe('Participation', () => {
         cy.get('[data-cy="activities"]').click();
         cy.wait('@getInstitutions');
 
+        cy.wait('@availableTeams');
+
         cy.get('[data-cy="memberActivitiesTable"] tbody tr')
             .should('have.length', 2) // check if activity table has 2 instances
             .eq(0)
             .children()
             .eq(3)
-            .should('contain', '1'); // check if first activity has 1 participation
+            .should('contain', NUM_PARTICIPATIONS_1); // check if first activity has 1 participation
 
         // select show enrollments on first activity
         cy.get('[data-cy="memberActivitiesTable"] tbody tr')
             .eq(0)
             .children()
             .eq(11)
+            .parent()
+            .find('[data-cy="showEnrollments"]')
             .click();
 
-        /*
-        cy.wait('@availableTeams');
+        cy.wait('@showEnrollments');
 
         // check if activity enrollments table has 2 instances
         cy.get('[data-cy="activityEnrollmentsTable"] tbody tr')
@@ -59,11 +64,15 @@ describe('Participation', () => {
         // create participation with that enrollment
         cy.get('[data-cy="activityEnrollmentsTable"] tbody tr')
             .eq(0)
-            .get('[data-cy="createParticipation"]').click();
+            .children()
+            .eq(4)
+            .parent()
+            .find('[data-cy="createParticipation"]')
+            .click();
 
         cy.get('[data-cy="ratingInput"]').type(RATING_1);   // input rating
 
-        cy.get('[data-cy="createParticipation"]').click();
+        cy.get('[data-cy="saveParticipation"]').click();
 
         cy.wait('@create')
 
@@ -82,8 +91,8 @@ describe('Participation', () => {
             .should('have.length', 2) // check if activity table has 2 instances
             .eq(0)
             .children()
-            .eq(3)
-            .should('contain.value', 2); // check if first activity now has 2 participations*/
+            .eq(2)
+            .should('contain', NUM_PARTICIPATIONS_2); // check if first activity now has 2 participations*/
 
         cy.logout();
     });

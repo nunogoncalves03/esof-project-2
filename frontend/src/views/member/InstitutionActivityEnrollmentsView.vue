@@ -39,6 +39,7 @@
               class="mr-2 action-button"
               v-on="on"
               @click="() => createParticipation(item.volunteerId)"
+              data-cy="createParticipation"
             >
               mdi-check
             </v-icon>
