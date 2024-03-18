@@ -53,6 +53,19 @@
             </template>
             <span>Apply for Activity</span>
           </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-icon
+                class="mr-2 action-button"
+                color="blue"
+                v-on="on"
+                data-cy="assessButton"
+                @click="assessInstitution(item)"
+                >mdi-file-document-edit</v-icon
+              >
+            </template>
+            <span>Write Assessment</span>
+          </v-tooltip>
         </template>
       </v-data-table>
       <enrollment-dialog
