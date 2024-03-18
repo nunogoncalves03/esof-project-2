@@ -7,7 +7,8 @@
           <v-text-field
             label="Rating"
             :rules="[
-              (v) => isRatingValid(v) || 'Rating must be empty or between 1 and 5',
+              (v) =>
+                isRatingValid(v) || 'Rating must be empty or between 1 and 5',
             ]"
             v-model="newParticipation.rating"
             data-cy="ratingInput"

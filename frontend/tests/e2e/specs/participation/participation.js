@@ -1,11 +1,12 @@
 describe('Participation', () => {
     beforeEach(() => {
-        //cy.deleteAllButArs();
-        //cy.createDemoEntities();
+        cy.deleteAllButArs();
+        cy.createDemoEntities();
+        cy.createDemoActivities2();
     });
 
     afterEach(() => {
-        //cy.deleteAllButArs();
+        cy.deleteAllButArs();
     });
 
     it('create participation', () => {
