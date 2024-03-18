@@ -19,21 +19,16 @@ describe('Participation', () => {
         cy.demoMemberLogin();
 
         // intercept create participation request and inject date values in the request body
-        cy.intercept('POST', '/activities/*/participations', (req) => {
-            req.body = { applicationDeadline: '2024-01-13T12:00:00+00:00' };
-        }).as('create');
+        cy.intercept('POST', '/activities/*/participations').as('create');
 
         // intercept get institutions
         cy.intercept('GET', '/users/*/getInstitution').as('getInstitutions');
         cy.intercept('GET', '/activities/*/enrollments').as('showEnrollments');
-        cy.intercept('GET', '/themes/availableThemes').as('availableTeams')
 
         cy.get('[data-cy="institution"]').click();
 
         cy.get('[data-cy="activities"]').click();
         cy.wait('@getInstitutions');
-
-        cy.wait('@availableTeams');
 
         cy.get('[data-cy="memberActivitiesTable"] tbody tr')
             .should('have.length', 2) // check if activity table has 2 instances
