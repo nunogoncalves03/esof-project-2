@@ -572,6 +572,17 @@ export default class RemoteServices {
       });
   }
 
+  static async registerAssessment(assessment: Assessment): Promise<Assessment> {
+    return httpClient
+      .post(`/institutions/${assessment.institutionId}/assessments`, assessment)
+      .then((response) => {
+        return new Assessment(response.data);
+      })
+      .catch(async (error) => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
   // Participation Controller
 
   static async getVolunteerParticipations(): Promise<Participation[]> {
