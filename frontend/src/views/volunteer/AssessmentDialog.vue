@@ -10,9 +10,9 @@
             <v-col cols="12">
               <v-text-field
                 label="*Review"
-                :rules="[(r) => r.length >= 10 || 'Assessment review is required']"
                 required
                 v-model="newAssessment.review"
+                @input="() => validReview = newAssessment.review.length >= 10"
                 data-cy="reviewInput"
               ></v-text-field>
             </v-col>
@@ -28,8 +28,13 @@
         >
           Close
         </v-btn>
-        <v-btn color="blue-darken-1" variant="text" data-cy="assessInstitution">
-          Create
+        <v-btn
+          v-if="validReview"
+          color="blue-darken-1"
+          variant="text"
+          data-cy="assessInstitution"
+        >
+          Save
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -48,6 +53,7 @@ export default class AssessmentDialog extends Vue {
   @Model('dialog', Boolean) dialog!: boolean;
 
   newAssessment: Assessment = new Assessment();
+  validReview: boolean = false;
 
   cypressCondition: boolean = false;
 
