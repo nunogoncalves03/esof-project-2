@@ -56,7 +56,7 @@
         </template>
       </v-data-table>
       <enrollment-dialog
-        v-if="createEnrollmentDialog"
+        v-if="createEnrollmentDialog && activityId"
         v-model="createEnrollmentDialog"
         :activityId="activityId"
         v-on:close-enrollment-dialog="onCloseEnrollmentDialog"
@@ -169,15 +169,22 @@ export default class VolunteerActivitiesView extends Vue {
   }
 
   onCloseEnrollmentDialog() {
+    this.activityId = null;
     this.createEnrollmentDialog = false;
   }
 
   onCreateEnrollment(enrollment: Enrollment) {
+    this.activityId = null;
     this.createEnrollmentDialog = false;
     this.enrollments.push(enrollment);
   }
 
   canEnrollInActivity(activity: Activity): boolean {
+    // wait for the get enrollments request to finish
+    if (this.$store.getters.getLoading) {
+      return false;
+    }
+    
     return (
       activity.applicationDeadline > new Date().toISOString() &&
       !this.enrollments.some(
