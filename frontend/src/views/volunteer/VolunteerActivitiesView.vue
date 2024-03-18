@@ -56,12 +56,12 @@
           <v-tooltip v-if="canAssessInstitution(item)" bottom>
             <template v-slot:activator="{ on }">
               <v-icon
-                class="mr-2 action-button"
-                color="blue"
-                v-on="on"
-                data-cy="assessButton"
-                @click="assessInstitution(item)"
-                >mdi-file-document-edit</v-icon
+                  class="mr-2 action-button"
+                  color="blue"
+                  v-on="on"
+                  data-cy="assessButton"
+                  @click="assessInstitution"
+              >mdi-file-document-edit</v-icon
               >
             </template>
             <span>Write Assessment</span>
@@ -74,6 +74,11 @@
         :activityId="activityId"
         v-on:close-enrollment-dialog="onCloseEnrollmentDialog"
         v-on:create-enrollment="onCreateEnrollment"
+      />
+      <assessment-dialog
+        v-if="createAssessmentDialog"
+        v-model="createAssessmentDialog"
+        v-on:close-assessment-dialog="onCloseAssessmentDialog"
       />
     </v-card>
   </div>
@@ -88,11 +93,13 @@ import EnrollmentDialog from '@/views/volunteer/EnrollmentDialog.vue';
 import { show } from 'cli-cursor';
 import Assessment from "@/models/assessment/Assessment";
 import Participation from "@/models/participation/Participation";
+import AssessmentDialog from '@/views/volunteer/AssessmentDialog.vue';
 
 @Component({
   methods: { show },
   components: {
     'enrollment-dialog': EnrollmentDialog,
+    'assessment-dialog': AssessmentDialog,
   },
 })
 export default class VolunteerActivitiesView extends Vue {
@@ -105,6 +112,7 @@ export default class VolunteerActivitiesView extends Vue {
   activityId: number | null = null;
   createEnrollmentDialog: boolean = false;
 
+  createAssessmentDialog: boolean = false;
   headers: object = [
     {
       text: 'Name',
@@ -225,6 +233,14 @@ export default class VolunteerActivitiesView extends Vue {
         await this.$store.dispatch('error', error);
       }
     }
+  }
+
+ assessInstitution() {
+    this.createAssessmentDialog = true;
+  }
+
+  onCloseAssessmentDialog() {
+    this.createAssessmentDialog = false;
   }
 
   canAssessInstitution(activity: Activity): boolean {
