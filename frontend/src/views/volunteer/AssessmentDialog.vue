@@ -5,11 +5,17 @@
         <span class="headline">New Assessment</span>
       </v-card-title>
       <v-card-text>
-        <v-form ref="form" lazy-validation>
+        <v-form ref="form" @submit="assessInstitution">
           <v-row>
             <v-col cols="12">
               <v-text-field
                 label="*Review"
+                :rules="[
+                  (v) => !!v || 'Review is required',
+                  (v) =>
+                    validReview(v) ||
+                    'Review needs to have at least 10 characters',
+                ]"
                 required
                 v-model="newAssessment.review"
                 data-cy="reviewInput"
@@ -28,7 +34,7 @@
           Close
         </v-btn>
         <v-btn
-          v-if="validReview()"
+          v-if="canCreate()"
           color="blue-darken-1"
           variant="text"
           @click="assessInstitution"
@@ -41,7 +47,7 @@
   </v-dialog>
 </template>
 <script lang="ts">
-import { Vue, Component, Model } from 'vue-property-decorator';
+import {Vue, Component, Model, Prop} from 'vue-property-decorator';
 import Assessment from '@/models/assessment/Assessment';
 import RemoteServices from '@/services/RemoteServices';
 import { ISOtoString } from '@/services/ConvertDateService';
@@ -51,22 +57,32 @@ import { ISOtoString } from '@/services/ConvertDateService';
 })
 export default class AssessmentDialog extends Vue {
   @Model('dialog', Boolean) dialog!: boolean;
+  @Prop({ type : Number, required: true }) readonly institutionId!: number;
 
   newAssessment: Assessment = new Assessment();
 
   cypressCondition: boolean = false;
 
-  validReview() {
-    if (!this.newAssessment.review)
+  validReview(review?: string) {
+    if (!review)
         return false;
-    return this.newAssessment.review.length >= 10;
+    return review.length >= 10;
+  }
+
+  canCreate(): boolean {
+    return this.validReview(this.newAssessment.review);
   }
 
   async created() {
     this.newAssessment = new Assessment();
+    this.newAssessment.institutionId = this.institutionId;
   }
 
   async assessInstitution(e?: SubmitEvent) {
+    if (e) {
+      e.preventDefault();
+    }
+
     if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
       try {
         const result = await RemoteServices.registerAssessment(

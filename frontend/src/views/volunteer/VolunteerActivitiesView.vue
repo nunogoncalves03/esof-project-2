@@ -60,7 +60,7 @@
                   color="blue"
                   v-on="on"
                   data-cy="assessButton"
-                  @click="assessInstitution"
+                  @click="() => assessInstitution(item.institution.id)"
               >mdi-file-document-edit</v-icon
               >
             </template>
@@ -76,9 +76,11 @@
         v-on:create-enrollment="onCreateEnrollment"
       />
       <assessment-dialog
-        v-if="createAssessmentDialog"
+        v-if="createAssessmentDialog && institutionId"
         v-model="createAssessmentDialog"
+        :institution-id="institutionId"
         v-on:close-assessment-dialog="onCloseAssessmentDialog"
+        v-on:create-assessment="onCreateAssessment"
       />
     </v-card>
   </div>
@@ -112,6 +114,7 @@ export default class VolunteerActivitiesView extends Vue {
   activityId: number | null = null;
   createEnrollmentDialog: boolean = false;
 
+  institutionId: number | null = null;
   createAssessmentDialog: boolean = false;
   headers: object = [
     {
@@ -235,12 +238,20 @@ export default class VolunteerActivitiesView extends Vue {
     }
   }
 
- assessInstitution() {
+  assessInstitution(institutionId: number) {
+    this.institutionId = institutionId;
     this.createAssessmentDialog = true;
   }
 
   onCloseAssessmentDialog() {
+    this.institutionId = null;
     this.createAssessmentDialog = false;
+  }
+
+  onCreateAssessment(assessment: Assessment) {
+    this.institutionId = null;
+    this.createAssessmentDialog = false;
+    this.assessments.push(assessment);
   }
 
   canAssessInstitution(activity: Activity): boolean {
