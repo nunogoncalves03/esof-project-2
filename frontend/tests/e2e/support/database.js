@@ -177,6 +177,65 @@ Cypress.Commands.add('createDemoActivitiesForEnrollmentTest', () => {
   })
 });
 
+Cypress.Commands.add('createDemoEntitiesForAssessmentTest', () => {
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + INSTITUTION_COLUMNS + generateInstitutionTuple(2, "DEMO INSTITUTION-2", "000000002"),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(1, "Same institution is enrolled and participates", 1),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(2, "Same institution is enrolled and participates", 1),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(3, "Same institution is enrolled and does not participate", 2),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(4, "Same institution is not enrolled", 2),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(5, "Same institution before end date", 2),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(6, "Other institution is enrolled and participates", 3),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ENROLLMENT_COLUMNS + generateEnrollmentTupleForAssessmentTest(1, 1),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ENROLLMENT_COLUMNS + generateEnrollmentTupleForAssessmentTest(2, 2),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ENROLLMENT_COLUMNS + generateEnrollmentTupleForAssessmentTest(3, 3),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ENROLLMENT_COLUMNS + generateEnrollmentTupleForAssessmentTest(4, 6),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + PARTICIPATION_COLUMNS + generateParticipationTupleForAssessmentTest(1, 1),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + PARTICIPATION_COLUMNS + generateParticipationTupleForAssessmentTest(2, 2),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + PARTICIPATION_COLUMNS + generateParticipationTupleForAssessmentTest(3, 6),
+    credentials: credentials,
+  })
+});
+
 function generateAuthUserTuple(id, authType, username, userId) {
   return "VALUES ('"
     + authType + "', '"
@@ -194,9 +253,14 @@ function generateUserTuple(id, userType, name, role, institutionId) {
     + institutionId + ")";
 }
 
-function generateInstitutionTuple(id) {
-  return "VALUES ('"
-    + id + "', 't', 'abca428c09862e89', '2022-08-06 17:58:21.402146','demo_institution@mail.com', 'DEMO INSTITUTION', '000000000', '2024-02-06 17:58:21.402134')";
+function generateInstitutionTuple(id, name="DEMO INSTITUTION", nif="000000000") {
+  return `VALUES (\
+    '${id}', 't',\
+    'abca428c09862e89',\
+    '2022-08-06 17:58:21.402146',\
+    'demo_institution@mail.com',\
+    '${name}','${nif}',\
+    '2024-02-06 17:58:21.402134')`;
 }
 
 function generateActivityTupleForParticipationTest(id, description, name, participantsNumberLimit) {
@@ -238,4 +302,24 @@ function generateEnrollmentTupleForEnrollmentTest(id, enrollmentDateTime, activi
     + id + "', '" + enrollmentDateTime + "', '"
     + "sql-inserted-motivation" + "', '"
     + activityId + "', '3')";
+}
+
+function generateActivityTupleForAssessmentTest(id, description, pLimit, iId="1") {
+  return `VALUE (\
+    '${id}', \
+    '2024-02-06 17:58:21.402146',\
+    '2024-02-06 17:58:21.402146',\
+    '${description}',\
+    '2024-02-08 10:58:21.402146',\
+    'A${id}',${pLimit},\
+    Lisbon, 2024-02-07 17:58:21.402146,\
+    APPROVED,${iId})`
+}
+
+function generateEnrollmentTupleForAssessmentTest(id, aId) {
+  return `VALUE ('${id}','2024-02-06 18:51:37.595713','sql-inserted-motivation','${aId}','3')`
+}
+
+function generateParticipationTupleForAssessmentTest(id, aId) {
+  return `VALUE ('${id}','2024-02-06','18:51:37.595713','5','${aId}','3')`
 }
