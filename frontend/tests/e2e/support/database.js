@@ -6,6 +6,7 @@ const credentials = {
   port: Cypress.env('psql_db_port'),
 };
 
+const ACTIVITY_COLUMNS = "activity (id, application_deadline, creation_date, description, ending_date, name, participants_number_limit, region, starting_date, state, institution_id)";
 const INSTITUTION_COLUMNS = "institutions (id, active, confirmation_token, creation_date, email, name, nif, token_generation_date)";
 const USER_COLUMNS = "users (user_type, id, creation_date, name, role, state, institution_id)";
 const AUTH_USERS_COLUMNS = "auth_users (auth_type, id, active, email, username, user_id)";
@@ -36,6 +37,18 @@ Cypress.Commands.add('deleteAllButArs', () => {
     query: "DELETE FROM ENROLLMENT",
     credentials: credentials,
   })
+  cy.task('queryDatabase', {
+    query: "DELETE FROM ASSESSMENT",
+    credentials: credentials,
+  });
+  cy.task('queryDatabase', {
+    query: "DELETE FROM ENROLLMENT",
+    credentials: credentials,
+  });
+  cy.task('queryDatabase', {
+    query: "DELETE FROM PARTICIPATION",
+    credentials: credentials,
+  });
   cy.task('queryDatabase', {
     query: "DELETE FROM ACTIVITY",
     credentials: credentials,
@@ -183,27 +196,27 @@ Cypress.Commands.add('createDemoEntitiesForAssessmentTest', () => {
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
-    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(1, "Same institution is enrolled and participates", 1),
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForAssessmentTest(1, "Same institution is enrolled and participates", 1),
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
-    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(2, "Same institution is enrolled and participates", 1),
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForAssessmentTest(2, "Same institution is enrolled and participates", 1),
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
-    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(3, "Same institution is enrolled and does not participate", 2),
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForAssessmentTest(3, "Same institution is enrolled and does not participate", 2),
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
-    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(4, "Same institution is not enrolled", 2),
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForAssessmentTest(4, "Same institution is not enrolled", 2),
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
-    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(5, "Same institution before end date", 2),
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForAssessmentTest(5, "Same institution before end date", 2),
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
-    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForEnrollmentTest(6, "Other institution is enrolled and participates", 3),
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForAssessmentTest(6, "Other institution is enrolled and participates", 3),
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
@@ -305,21 +318,21 @@ function generateEnrollmentTupleForEnrollmentTest(id, enrollmentDateTime, activi
 }
 
 function generateActivityTupleForAssessmentTest(id, description, pLimit, iId="1") {
-  return `VALUE (\
+  return `VALUES (\
     '${id}', \
     '2024-02-06 17:58:21.402146',\
     '2024-02-06 17:58:21.402146',\
     '${description}',\
     '2024-02-08 10:58:21.402146',\
     'A${id}',${pLimit},\
-    Lisbon, 2024-02-07 17:58:21.402146,\
-    APPROVED,${iId})`
+    'Lisbon', '2024-02-07 17:58:21.402146',\
+    'APPROVED','${iId}')`
 }
 
 function generateEnrollmentTupleForAssessmentTest(id, aId) {
-  return `VALUE ('${id}','2024-02-06 18:51:37.595713','sql-inserted-motivation','${aId}','3')`
+  return `VALUES ('${id}','2024-02-06 18:51:37.595713','sql-inserted-motivation','${aId}','3')`
 }
 
 function generateParticipationTupleForAssessmentTest(id, aId) {
-  return `VALUE ('${id}','2024-02-06','18:51:37.595713','5','${aId}','3')`
+  return `VALUES ('${id}','2024-02-06 18:51:37.595713','5','${aId}','3')`
 }
