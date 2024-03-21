@@ -40,9 +40,6 @@ describe('Participation', () => {
         // select show enrollments on first activity
         cy.get('[data-cy="memberActivitiesTable"] tbody tr')
             .eq(0)
-            .children()
-            .eq(11)
-            .parent()
             .find('[data-cy="showEnrollments"]')
             .click();
 
