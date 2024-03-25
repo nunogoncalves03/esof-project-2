@@ -203,7 +203,7 @@ Cypress.Commands.add('createDemoEntitiesForAssessmentTest', () => {
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
-    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForAssessmentTest(6, "Other institution is enrolled and participates", 3),
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTupleForAssessmentTest(6, "Other institution is enrolled and participates", 3, 2),
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
@@ -304,7 +304,7 @@ function generateEnrollmentTupleForEnrollmentTest(id, enrollmentDateTime, activi
     + activityId + "', '3')";
 }
 
-function generateActivityTupleForAssessmentTest(id, description, pLimit, iId="1") {
+function generateActivityTupleForAssessmentTest(id, description, pLimit, iId=1) {
   return `VALUES (\
     '${id}', \
     '2024-02-06 17:58:21.402146',\
