@@ -61,8 +61,6 @@ export default class AssessmentDialog extends Vue {
 
   newAssessment: Assessment = new Assessment();
 
-  cypressCondition: boolean = false;
-
   validReview(review?: string) {
     if (!review)
         return false;
