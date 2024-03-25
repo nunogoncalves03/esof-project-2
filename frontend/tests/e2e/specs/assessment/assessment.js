@@ -18,10 +18,19 @@ describe('Assessment', () => {
 
     // intercept get activities request
     cy.intercept('GET', '/activities').as('getActivities');
+    // intercept get enrollments request
+    cy.intercept('GET', '/enrollments/volunteer').as('getEnrollments');
+    // intercept get assessments request
+    cy.intercept('GET', '/assessments/volunteer').as('getAssessments');
+    // intercept get participations request
+    cy.intercept('GET', '/participations/volunteer').as('getParticipations');
     // go to volunteer activities view
     cy.get('[data-cy="volunteerActivities"]').click();
     // wait for requests to be done
     cy.wait('@getActivities');
+    cy.wait('@getEnrollments');
+    cy.wait('@getAssessments');
+    cy.wait('@getParticipations');
 
     cy.get('[data-cy="volunteerActivitiesTable"] tbody tr')
       .should('have.length', 6) // checking that the activities table has 6 instances
