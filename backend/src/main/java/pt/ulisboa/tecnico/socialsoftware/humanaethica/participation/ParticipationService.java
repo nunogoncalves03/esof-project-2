@@ -40,6 +40,7 @@ public class ParticipationService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<ParticipationDto> getVolunteerParticipations(Integer userId) {
         if (userId == null) throw new HEException(USER_NOT_FOUND);
+        userRepository.findById(userId).orElseThrow(() -> new HEException(USER_NOT_FOUND, userId));
 
         return participationRepository.getParticipationsForVolunteerId(userId).stream()
                 .sorted(Comparator.comparing(Participation::getAcceptanceDate))
