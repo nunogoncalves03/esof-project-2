@@ -40,6 +40,7 @@ public class AssessmentService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<AssessmentDto> getVolunteerAssessments(Integer userId) {
         if (userId == null) throw new HEException(USER_NOT_FOUND);
+        userRepository.findById(userId).orElseThrow(() -> new HEException(USER_NOT_FOUND, userId));
 
         return assessmentRepository.getAssessmentsForVolunteerId(userId).stream()
                 .sorted(Comparator.comparing(Assessment::getReviewDate))
