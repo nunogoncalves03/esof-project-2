@@ -36,9 +36,13 @@ describe('Assessment', () => {
       .should('have.length', 6) // checking that the activities table has 6 instances
       .eq(0)
       .children()
+      .eq(0)
       .should('contain', 'A1') // checking that the first activity is named 'A1'
-      .find('[data-cy="assessButton"]') // assess the first activity
-      .click();
+
+    cy.get('[data-cy="volunteerActivitiesTable"] tbody tr')
+    .eq(0)
+    .find('[data-cy="assessButton"]')
+    .click(); // assess the first activity
 
     // intercept create assessment request
     cy.intercept('POST', '/institutions/*/assessments').as('createAssessment');
@@ -76,6 +80,7 @@ describe('Assessment', () => {
       .should('have.length', 1) // only one assessment created
       .eq(0)
       .children()
+      .eq(0)
       .should('contain', REVIEW) // checking that the review has the correct text
       
     cy.logout();
