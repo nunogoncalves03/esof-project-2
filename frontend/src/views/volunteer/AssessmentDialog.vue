@@ -47,7 +47,7 @@
   </v-dialog>
 </template>
 <script lang="ts">
-import {Vue, Component, Model, Prop} from 'vue-property-decorator';
+import { Vue, Component, Model, Prop } from 'vue-property-decorator';
 import Assessment from '@/models/assessment/Assessment';
 import RemoteServices from '@/services/RemoteServices';
 import { ISOtoString } from '@/services/ConvertDateService';
@@ -57,13 +57,12 @@ import { ISOtoString } from '@/services/ConvertDateService';
 })
 export default class AssessmentDialog extends Vue {
   @Model('dialog', Boolean) dialog!: boolean;
-  @Prop({ type : Number, required: true }) readonly institutionId!: number;
+  @Prop({ type: Number, required: true }) readonly institutionId!: number;
 
   newAssessment: Assessment = new Assessment();
 
   validReview(review?: string) {
-    if (!review)
-        return false;
+    if (!review) return false;
     return review.length >= 10;
   }
 

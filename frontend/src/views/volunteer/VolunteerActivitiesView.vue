@@ -56,12 +56,12 @@
           <v-tooltip v-if="canAssessInstitution(item)" bottom>
             <template v-slot:activator="{ on }">
               <v-icon
-                  class="mr-2 action-button"
-                  color="blue"
-                  v-on="on"
-                  data-cy="assessButton"
-                  @click="() => assessInstitution(item.institution.id)"
-              >mdi-file-document-edit</v-icon
+                class="mr-2 action-button"
+                color="blue"
+                v-on="on"
+                data-cy="assessButton"
+                @click="() => assessInstitution(item.institution.id)"
+                >mdi-file-document-edit</v-icon
               >
             </template>
             <span>Write Assessment</span>
@@ -93,7 +93,7 @@ import Activity from '@/models/activity/Activity';
 import Enrollment from '@/models/enrollment/Enrollment';
 import EnrollmentDialog from '@/views/volunteer/EnrollmentDialog.vue';
 import { show } from 'cli-cursor';
-import Assessment from "@/models/assessment/Assessment";
+import Assessment from '@/models/assessment/Assessment';
 import Participation from "@/models/participation/Participation";
 import AssessmentDialog from '@/views/volunteer/AssessmentDialog.vue';
 
@@ -255,10 +255,16 @@ export default class VolunteerActivitiesView extends Vue {
   }
 
   canAssessInstitution(activity: Activity): boolean {
-    return (activity.endingDate < new Date().toISOString() &&
-      !this.assessments.some((assessment) => assessment.institutionId === activity.institution.id)) &&
-      this.participations.some((participation) => participation.activityId === activity.id)
-  };
+    return (
+      activity.endingDate < new Date().toISOString() &&
+      !this.assessments.some(
+        (assessment) => assessment.institutionId === activity.institution.id,
+      ) &&
+      this.participations.some(
+        (participation) => participation.activityId === activity.id,
+      )
+    );
+  }
 }
 </script>
 
